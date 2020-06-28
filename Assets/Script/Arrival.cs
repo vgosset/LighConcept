@@ -17,6 +17,11 @@ public class Arrival : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "Player")
-            SceneManager.LoadScene("Gameplay1");
+        {
+            other.transform.GetComponent<PlayerMovement>().ResetPos();
+            other.transform.GetComponent<PlayerMovement>().SetActive();
+            MapGeneration.Instance.NextLevel();
+        }
+        
     }
 }

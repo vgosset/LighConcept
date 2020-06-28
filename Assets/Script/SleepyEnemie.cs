@@ -15,7 +15,7 @@ public class SleepyEnemie : MonoBehaviour
     [SerializeField] private float triggerTimer;
     [SerializeField] private float delayChase;
 
-    private Transform initPos;
+    private Vector3 initPos;
     private Animator anim;
     private MeshRenderer mesh;
     private Transform m_target;
@@ -46,12 +46,13 @@ public class SleepyEnemie : MonoBehaviour
         }
         else
         {
+            agent.SetDestination(initPos);
             PlayerDetection();
         }
     }
     private void Init()
     {
-        initPos = this.transform;
+        initPos = transform.position;
 
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
@@ -80,10 +81,9 @@ public class SleepyEnemie : MonoBehaviour
     private void SetSleep() 
     {
         active = false;
-        mesh.enabled = false;
+        // mesh.enabled = false;
         light.SetActive(false);
-        agent.isStopped = true;
-
+        // agent.isStopped = true;
     }
     private bool IsAsctive()
     {
@@ -112,6 +112,9 @@ public class SleepyEnemie : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "Player")
-          SceneManager.LoadScene("Gameplay1");
+        {
+            other.transform.GetComponent<PlayerMovement>().ResetPos();
+            MapGeneration.Instance.DelayedDeath();
+        }
     }
 }
