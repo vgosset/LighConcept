@@ -116,5 +116,9 @@ public class SleepyEnemie : MonoBehaviour
             other.transform.GetComponent<PlayerMovement>().ResetPos();
             MapGeneration.Instance.DelayedDeath();
         }
+        if (other.transform.tag == "Bullet")
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

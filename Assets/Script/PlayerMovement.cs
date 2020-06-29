@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private VariableJoystick joysticMov;
     [SerializeField] private float speed;
+    [SerializeField] private GameObject trail;
     [SerializeField] private float boostDecrease;
     
     private Vector3 dest = new Vector3();
@@ -33,13 +34,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (dest != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(dest);
-            transform.Translate (dest * speed * dt, Space.World);
+            transform.position += dest * Time.deltaTime * speed;
+            // transform.rotation = Quaternion.LookRotation(dest);
+            // transform.Translate (dest * speed * dt, Space.World);
         }
         if (speed > destSpeed)
         {
             speed -= dt * boostDecrease;
         }
+        else
+            trail.SetActive(false);
+            
     }
     public void ResetPos()
     {
@@ -52,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         // StartCoroutine(Cor_SpeedBoost(amout, delay));
         destSpeed = speed;
         speed += amout;
+        trail.SetActive(true);
     }
     public void SetActive()
     {

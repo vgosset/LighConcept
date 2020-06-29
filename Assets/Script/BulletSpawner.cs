@@ -7,12 +7,14 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField] private GameObject bullet;
 
     [SerializeField] private float radius;
-    [SerializeField] private LayerMask playerMastask;
+    [SerializeField] private LayerMask playerMask;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float cooldown;
     [SerializeField] private float startDelay;
     [SerializeField] private Light light;
+    [SerializeField] private Vector3 dirBullet;
 
+    private bool fireOn = false;
     private float timer;
 
     void Start()
@@ -23,16 +25,22 @@ public class BulletSpawner : MonoBehaviour
     void Update()
     {
         PlayerDetection();
-
+        TimerHandler();
+    }
+    private void TimerHandler()
+    {
         if (timer > 0)
         {
             timer -= Time.deltaTime;
-            light.intensity = (cooldown - timer) / cooldown * 6;
+            light.intensity = (cooldown - timer) / cooldown * 4;
 
             if (timer < 0)
             {
                 timer = cooldown;
-                SpawnBullet();
+                if (fireOn)
+                {
+                    SpawnBullet();
+                }
             }
         }
     }
@@ -43,12 +51,13 @@ public class BulletSpawner : MonoBehaviour
 
         t.parent = this.transform.GetChild(0);
         t.localPosition = Vector3.zero;
+        t.parent = null;
 
-        t.GetComponent<Bullet>().SetSpeed(bulletSpeed);
+        t.GetComponent<Bullet>().SetSpeed(bulletSpeed, dirBullet);
     }
     private void PlayerDetection()
     {
-        Collider[] target = Physics.OverlapSphere(transform.position, radius, playerMastask);
+        Collider[] target = Physics.OverlapSphere(transform.position, radius, playerMask);
 
         if (target.Length > 0)
         {
@@ -59,11 +68,12 @@ public class BulletSpawner : MonoBehaviour
     }
     public void SetActive()
     {
-
         light.gameObject.SetActive(true);
+        fireOn = true;
     }
     private void SetSleep() 
     {
         light.gameObject.SetActive(false);
+        fireOn = false;
     }
 }

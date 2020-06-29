@@ -5,14 +5,17 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private float m_speed = 0;
+    private Vector3 m_dir;
     
-    private void Update()
+    private void LateUpdate()
     {
-        transform.localPosition += Vector3.forward * m_speed * Time.deltaTime;
+        transform.position += m_dir * m_speed * Time.deltaTime;
     }
-    public void SetSpeed(float speed)
+    public void SetSpeed(float speed, Vector3 dir)
     {
         m_speed = speed;
+        m_dir = dir;
+        transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
     }
     private void OnTriggerEnter(Collider other)
     {
